@@ -25,7 +25,7 @@ fn main() {
   }
 
   let template = "Some awesome template {:key}";
-  let test_template = templatify! {
+  templatify! {
     struct Test {
       key: String,
     }, template

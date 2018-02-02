@@ -1,39 +1,36 @@
 use std::collections::HashMap;
-use regex::Regex;
 
 macro_rules! templatify {
   (struct $name:ident {
     $($field_name:ident: $field_type:ty,)*
   }, $template:ident) => {
+    use regex::Regex;
+
     struct $name<'a> {
       _processed_template_pieces: Vec<&'a str>,
       _processed_keys: Vec<&'a str>,
+      _string_length_without_keys: usize,
       $($field_name: $field_type,)*
     }
 
     impl<'a> $name<'a> {
-      pub fn parse(contents: &str) {
+      pub fn parse(&mut self, contents: &'a str) {
         let re = Regex::new("\\{:[^\\s]+\\}").unwrap();
 
         let mut last_index = 0;
         for mat in re.find_iter(contents) {
-          let unformatted_piece = contents[last_index..mat.start()];
-          self._processed_vector.push(unformatted_piece);
-          self._processed_keys.push(contents[mat.start() + 2..mat.end() - 1]);
+          let unformatted_piece = &contents[last_index..mat.start()];
+          self._processed_template_pieces.push(unformatted_piece);
+          self._processed_keys.push(&contents[mat.start() + 2..mat.end() - 1]);
           last_index = mat.end();
           self._string_length_without_keys = self._string_length_without_keys + unformatted_piece.len();
         }
 
-        self._processed_vector.push(contents[last_index..]);
+        self._processed_template_pieces.push(&contents[last_index..]);
       }
 
       pub fn to_str(&self) -> &str {
-
-      }
-
-      // This is purely an example—not a good one.
-      fn get_field_names() -> Vec<&'static str> {
-        vec![$(stringify!($field_name)),*]
+        ""
       }
     }
   }

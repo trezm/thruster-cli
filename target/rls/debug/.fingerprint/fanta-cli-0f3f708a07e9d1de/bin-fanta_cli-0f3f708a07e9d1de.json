@@ -1,1 +1,0 @@
-{"rustc":12555211917824218822,"features":"[]","target":8206531356034258236,"profile":14119667493710126711,"deps":[["regex v0.2.5",16193822819977584513]],"local":[{"MtimeBased":[[1517575834,595758427],"/Users/pete/dev/fanta-cli/target/rls/debug/.fingerprint/fanta-cli-0f3f708a07e9d1de/dep-bin-fanta_cli-0f3f708a07e9d1de"]}],"rustflags":["--error-format=json"]}
