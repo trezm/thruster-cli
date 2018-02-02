@@ -1,0 +1,7 @@
+[package]
+name = "fanta-cli"
+version = "0.1.0"
+authors = ["Pete Mertz <peter.s.mertz@gmail.com>"]
+
+[dependencies]
+regex = { version = "0.2.5", features = ["pattern"] }
