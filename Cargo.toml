@@ -5,3 +5,4 @@ authors = ["Pete Mertz <peter.s.mertz@gmail.com>"]
 
 [dependencies]
 regex = { version = "0.2.5", features = ["pattern"] }
+rand = "0.4"

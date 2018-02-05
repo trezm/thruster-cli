@@ -1,37 +1,22 @@
-use std::collections::HashMap;
-
 macro_rules! templatify {
-  (struct $name:ident {
-    $($field_name:ident: $field_type:ty,)*
-  }, $template:ident) => {
-    use regex::Regex;
+  ( $head_template:expr $(;$key:expr; $template:expr)* ) => {
+    {
+      let mut total_length = 0;
+      total_length = total_length + $head_template.len();
 
-    struct $name<'a> {
-      _processed_template_pieces: Vec<&'a str>,
-      _processed_keys: Vec<&'a str>,
-      _string_length_without_keys: usize,
-      $($field_name: $field_type,)*
-    }
+      $(
+        total_length = total_length + $key.len() + $template.len();
+      )*
 
-    impl<'a> $name<'a> {
-      pub fn parse(&mut self, contents: &'a str) {
-        let re = Regex::new("\\{:[^\\s]+\\}").unwrap();
+      let mut output_string = String::with_capacity(total_length);
+      output_string.push_str($head_template);
 
-        let mut last_index = 0;
-        for mat in re.find_iter(contents) {
-          let unformatted_piece = &contents[last_index..mat.start()];
-          self._processed_template_pieces.push(unformatted_piece);
-          self._processed_keys.push(&contents[mat.start() + 2..mat.end() - 1]);
-          last_index = mat.end();
-          self._string_length_without_keys = self._string_length_without_keys + unformatted_piece.len();
-        }
+      $(
+        output_string.push_str($key);
+        output_string.push_str($template);
+      )*
 
-        self._processed_template_pieces.push(&contents[last_index..]);
-      }
-
-      pub fn to_str(&self) -> &str {
-        ""
-      }
+      output_string
     }
   }
 }
