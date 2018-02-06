@@ -1,8 +1,9 @@
 pub fn create() -> String {
   templatify! { "extern crate dotenv;
 extern crate env_logger;
-extern crate futures;
 extern crate fanta;
+extern crate serde;
+extern crate serde_json;
 extern crate tokio_proto;
 extern crate tokio_service;
 extern crate time;
@@ -14,10 +15,9 @@ extern crate time;
 pub mod schema;
 pub mod models;
 
-mod assets;
 mod context;
+mod util;
 
-use assets::{init as asset_routes};
 use fanta::{App, MiddlewareChain};
 use time::Duration;
 use context::{generate_context, Ctx};

@@ -9,9 +9,6 @@ use diesel::RunQueryDsl;
 use diesel::result::Error;
 use util::db;
 use models::"; &name.to_snek_case() ;"s::{"; name ;", New"; name ;"};
-use std::io::Read;
-use dotenv::dotenv;
-use std::env;
 
 pub fn create_"; &name.to_snek_case() ;"(new_"; &name.to_snek_case() ;": New"; name ;") -> Result<"; name ;", Error> {
   let conn = db::establish_connection();

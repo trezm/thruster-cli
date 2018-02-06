@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["Pete Mertz <peter.s.mertz@gmail.com>"]
 
 [dependencies]
+chrono = "0.4"
 regex = { version = "0.2.5", features = ["pattern"] }
 rand = "0.4"

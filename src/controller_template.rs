@@ -5,7 +5,7 @@ pub fn create(name: &str, context_name: &str) -> String {
 use fanta::{MiddlewareChain};
 
 use super::"; &name.to_snek_case() ;"_service;
-use models::"; &name.to_snek_case() ;"::{New"; name ;", "; name ;"};
+use models::"; &name.to_snek_case() ;"s::{New"; name ;", "; name ;"};
 
 pub fn create_"; &name.to_snek_case() ;"(mut context: "; context_name ;", _chain: &MiddlewareChain<"; context_name ;">) -> "; context_name ;" {
   context
