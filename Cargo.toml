@@ -2,6 +2,13 @@
 name = "fanta-cli"
 version = "0.1.0"
 authors = ["Pete Mertz <peter.s.mertz@gmail.com>"]
+description = "A cli for Fanta, the rust web framework."
+readme = "README.md"
+license = "MIT"
+documentation = "https://github.com/trezm/fanta-cli"
+homepage = "https://github.com/trezm/fanta-cli"
+repository = "https://github.com/trezm/fanta-cli"
+
 
 [dependencies]
 chrono = "0.4"
