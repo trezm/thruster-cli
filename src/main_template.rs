@@ -18,7 +18,7 @@ pub mod models;
 mod context;
 mod util;
 
-use fanta::{App, MiddlewareChain};
+use fanta::{App, MiddlewareChain, MiddlewareReturnValue};
 use time::Duration;
 use context::{generate_context, Ctx};
 
@@ -34,7 +34,7 @@ lazy_static! {
   };
 }
 
-fn not_found_404(context: Ctx, _chain: &MiddlewareChain<Ctx>) -> Ctx {
+fn not_found_404(context: Ctx, _chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValue<Ctx> {
   let mut context = Ctx::new(context);
 
   context.body = \"<html>
@@ -43,10 +43,10 @@ fn not_found_404(context: Ctx, _chain: &MiddlewareChain<Ctx>) -> Ctx {
   context.set_header(\"Content-Type\", \"text/html\");
   context.status_code = 404;
 
-  context
+  Box::new(future::ok(context))
 }
 
-fn profiling(context: Ctx, chain: &MiddlewareChain<Ctx>) -> Ctx {
+fn profiling(context: Ctx, chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValue<Ctx> {
   let start_time = time::now();
 
   let context = chain.next(context);
@@ -57,7 +57,7 @@ fn profiling(context: Ctx, chain: &MiddlewareChain<Ctx>) -> Ctx {
     context.method.clone(),
     context.path.clone());
 
-  context
+  Box::new(future::ok(context))
 }
 
 fn main() {
