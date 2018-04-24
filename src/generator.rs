@@ -2,11 +2,10 @@ use std::process::Command;
 use std::fs::{create_dir, File};
 use std::io::prelude::*;
 use chrono::Utc;
+use fuel_line::Render;
 use utils::*;
 
-use context_template;
 use controller_template;
-use main_template;
 use mod_template;
 use model_template;
 use service_template;
@@ -120,15 +119,16 @@ pub fn init(name: &str) {
     .output()
     .expect("failed to initialize rust");
 
-
   let dependencies = "'diesel = { version = \"1.0.0-rc1\", features = [\"postgres\", \"uuid\"] }
 dotenv = \"0.9.0\"
-fanta = \"0.1.5\"
+futures = \"0.1\"
 lazy_static = \"0.2\"
 serde = \"1.0.24\"
 serde_json = \"1.0.8\"
 serde_derive = \"1.0.24\"
+thruster = \"0.3.5\"
 time = \"0.1.38\"
+tokio = \"0.1.3\"
 tokio-proto = \"0.1\"
 tokio-service = \"0.1\"
 env_logger = { version = \"0.3.4\", default-features = false }
@@ -155,10 +155,18 @@ env_logger = { version = \"0.3.4\", default-features = false }
     .output()
     .expect("failed to setup diesel");
 
+  #[derive(Render)]
+  #[TemplateName = "./src/main.template.rs"]
+  struct MainTemplate {}
   let mut main_file = File::create(format!("{}/src/main.rs", name))
     .expect("Could not create main file");
-  main_file.write_all(main_template::create().as_bytes())
+  main_file.write_all((MainTemplate {}).render().as_bytes())
     .expect("Could not write main file");
+
+  let mut context_file = File::create(format!("{}/src/util.rs", name))
+    .expect("Could not create util file");
+  context_file.write_all(util_template::create().as_bytes())
+    .expect("Could not write util file");
 
   Command::new("mkdir")
     .arg(format!("{}/src/models", name))
@@ -171,13 +179,69 @@ env_logger = { version = \"0.3.4\", default-features = false }
 ".as_bytes())
     .expect("Could not write models/mod file");
 
+  #[derive(Render)]
+  #[TemplateName = "./src/context.template.rs"]
+  struct ContextTemplate {}
   let mut context_file = File::create(format!("{}/src/context.rs", name))
     .expect("Could not create context file");
-  context_file.write_all(context_template::create().as_bytes())
+  context_file.write_all((ContextTemplate {}).render().as_bytes())
     .expect("Could not write context file");
 
   let mut context_file = File::create(format!("{}/src/util.rs", name))
     .expect("Could not create util file");
   context_file.write_all(util_template::create().as_bytes())
     .expect("Could not write util file");
+
+  #[derive(Render)]
+  #[TemplateName = "./src/Dockerfile.template"]
+  struct DockerfileTemplate {}
+  let mut docker_file = File::create(format!("{}/Dockerfile", name))
+    .expect("Could not create Dockerfile");
+  docker_file.write_all((DockerfileTemplate {}).render().as_bytes())
+    .expect("Could not write Dockerfile");
+
+  #[derive(Render)]
+  #[TemplateName = "./src/docker-compose.yml.template"]
+  struct ComposeTemplate {
+    db_name: String
+  }
+  let mut docker_file = File::create(format!("{}/docker-compose.yml", name))
+    .expect("Could not create Dockerfile");
+  docker_file.write_all((ComposeTemplate {
+    db_name: name.to_owned()
+  }).render().as_bytes())
+    .expect("Could not write Dockerfile");
+
+  #[derive(Render)]
+  #[TemplateName = "./src/env.template"]
+  struct EnvTemplate {
+    db_name: String
+  }
+  let mut docker_file = File::create(format!("{}/.env", name))
+    .expect("Could not create .env");
+  docker_file.write_all((EnvTemplate {
+    db_name: name.to_owned()
+  }).render().as_bytes())
+    .expect("Could not write .env");
+
+  Command::new("mkdir")
+    .arg(format!("{}/examples", name))
+    .output()
+    .expect("failed to create examples directory");
+
+  #[derive(Render)]
+  #[TemplateName = "./src/ping.template.rs"]
+  struct PingExampleTemplate {}
+  let mut docker_file = File::create(format!("{}/examples/ping.rs", name))
+    .expect("Could not create ping example");
+  docker_file.write_all((PingExampleTemplate {}).render().as_bytes())
+    .expect("Could not write ping example");
+
+  #[derive(Render)]
+  #[TemplateName = "./src/schema.template.rs"]
+  struct SchemaTemplate {}
+  let mut docker_file = File::create(format!("{}/src/schema.rs", name))
+    .expect("Could not create schema");
+  docker_file.write_all((SchemaTemplate {}).render().as_bytes())
+    .expect("Could not write schema");
 }

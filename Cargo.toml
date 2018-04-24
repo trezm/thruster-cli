@@ -1,16 +1,18 @@
 [package]
-name = "fanta-cli"
-version = "0.1.0"
+name = "thruster-cli"
+version = "0.1.2"
 authors = ["Pete Mertz <peter.s.mertz@gmail.com>"]
-description = "A cli for Fanta, the rust web framework."
+description = "A cli for thruster, the rust web framework."
 readme = "README.md"
 license = "MIT"
-documentation = "https://github.com/trezm/fanta-cli"
-homepage = "https://github.com/trezm/fanta-cli"
-repository = "https://github.com/trezm/fanta-cli"
+documentation = "https://github.com/trezm/thruster-cli"
+homepage = "https://github.com/trezm/thruster-cli"
+repository = "https://github.com/trezm/thruster-cli"
 
 
 [dependencies]
 chrono = "0.4"
 regex = { version = "0.2.5", features = ["pattern"] }
 rand = "0.4"
+fuel_line = "0.1"
+fuel_line_derive = "0.1"

@@ -1,0 +1,51 @@
+version: '2.1'
+services:
+  postgres:
+    image: postgres:9.6
+    ports:
+     - "5432:5432"
+    volumes:
+     - .:/data
+    environment:
+     - POSTGRES_DB={{ db_name }}
+     - POSTGRES_USER=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "--username=postgres" ]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+  #
+  # Knex migrations against postgres
+  #
+  migrations:
+    links:
+     - postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build: .
+    command: bash -c "diesel migration run && cargo run --release --example ping"
+    ports:
+     - 4322:4321
+    environment:
+     - DATABASE_URL=postgres://postgres@postgres/{{ db_name }}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4321/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  server:
+    command: cargo watch -x run
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres/{{ db_name }}
+      - RUST_BACKTRACE=1
+    volumes:
+      - ".:/server"
+    ports:
+      - "4321:4321"

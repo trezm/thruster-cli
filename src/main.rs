@@ -4,6 +4,9 @@ extern crate regex;
 extern crate rand;
 extern crate chrono;
 
+#[macro_use] extern crate fuel_line;
+#[macro_use] extern crate fuel_line_derive;
+
 #[cfg(test)]
 use rand::Rng;
 #[cfg(test)]
@@ -13,8 +16,6 @@ use std::env;
 
 #[macro_use]
 mod templatify;
-mod context_template;
-mod main_template;
 mod mod_template;
 mod controller_template;
 mod model_template;
@@ -42,7 +43,7 @@ fn main() {
     }
 
     if unwrapped_arg == "init" {
-      init(&args.next().expect("init needs an argument, form 'fanta init [project-name]'"));
+      init(&args.next().expect("init needs an argument, form 'thruster init [project-name]'"));
     }
 
     if unwrapped_arg == "migrate" {
