@@ -1,5 +1,3 @@
-#![feature(test)]
-extern crate test;
 extern crate regex;
 extern crate rand;
 extern crate chrono;
@@ -7,20 +5,10 @@ extern crate chrono;
 #[macro_use] extern crate fuel_line;
 #[macro_use] extern crate fuel_line_derive;
 
-#[cfg(test)]
-use rand::Rng;
-#[cfg(test)]
-use test::Bencher;
-
 use std::env;
 
 #[macro_use]
 mod templatify;
-mod mod_template;
-mod controller_template;
-mod model_template;
-mod service_template;
-mod util_template;
 mod utils;
 mod generator;
 
@@ -42,6 +30,17 @@ fn main() {
       create_component(&name);
     }
 
+    if unwrapped_arg == "-h" ||
+      unwrapped_arg == "--help" {
+      println!("Useage: thruster [command]
+
+commands:
+    init [project-name]   Generate a new project with the given project name. Good project names are of the form 'test-project'
+    migrate               Run migrations
+    component [name]      Create a new component with the given name. Components should be PascalCase, i.e. SessionToken.
+")
+    }
+
     if unwrapped_arg == "init" {
       init(&args.next().expect("init needs an argument, form 'thruster init [project-name]'"));
     }
@@ -53,51 +52,3 @@ fn main() {
     arg = args.next();
   }
 }
-
-// #[bench]
-// fn test_format(b: &mut Bencher) {
-//   let index = "test_idx".to_string();
-//   let name = rand::thread_rng()
-//         .gen_ascii_chars()
-//         .take(10)
-//         .collect::<String>().to_string();
-
-//   b.iter(|| {
-//     format!("The {} fox {} the fence, awesome!", index, name);
-//   });
-// }
-
-// #[bench]
-// fn test_push_str(b: &mut Bencher) {
-//     let index = "test_idx".to_string();
-//     let name = rand::thread_rng()
-//         .gen_ascii_chars()
-//         .take(10)
-//         .collect::<String>().to_string();
-
-//     b.iter(|| {
-//         let mut url = String::with_capacity("The  fox  the fence, awesome!".len()
-//             + index.len() + name.len());
-//         url.push_str("The ");
-//         url.push_str(&index);
-//         url.push_str(" fox ");
-//         url.push_str(&name);
-//         url.push_str(" the fence, awesome! ");
-//         url
-//     });
-// }
-
-// #[bench]
-// fn test_templatify(b: &mut Bencher) {
-//   let index = "test_idx";
-//   let name = &rand::thread_rng()
-//         .gen_ascii_chars()
-//         .take(10)
-//         .collect::<String>();
-
-//   b.iter(|| {
-//     templatify! {
-//       "The "; index ;" fox "; name ;" the fence, awesome!"
-//     }
-//   });
-// }

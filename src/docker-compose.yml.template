@@ -24,7 +24,7 @@ services:
       postgres:
         condition: service_healthy
     build: .
-    command: bash -c "diesel migration run && cargo run --release --example ping"
+    command: cargo run --release --example ping
     ports:
      - 4322:4321
     environment:

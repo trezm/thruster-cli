@@ -23,20 +23,23 @@ use std::boxed::Box;
 use dotenv::dotenv;
 use futures::{future, Future};
 
-use thruster::{App, MiddlewareChain, MiddlewareReturnValue};
+use thruster::{middleware, App, MiddlewareChain, MiddlewareReturnValue};
+use thruster::builtins::server::Server;
+use thruster::server::ThrusterServer;
 use time::Duration;
-use context::{generate_context, Ctx};
 
-fn profiling(context: Ctx, chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValue<Ctx> {
+use crate::context::{generate_context, Ctx};
+
+fn profiling(context: Ctx, next: impl Fn(Ctx) -> MiddlewareReturnValue<Ctx>  + Send + Sync) -> MiddlewareReturnValue<Ctx> {
   let start_time = time::now();
 
-  let ctx_future = chain.next(context)
+  let ctx_future = next(context)
       .and_then(move |ctx| {
         let elapsed_time: Duration = time::now() - start_time;
         println!("[{}μs] {} -- {}",
           elapsed_time.num_microseconds().unwrap(),
-          ctx.method.clone(),
-          ctx.path.clone());
+          ctx.request.method(),
+          ctx.request.path());
 
         future::ok(ctx)
       });
@@ -44,9 +47,9 @@ fn profiling(context: Ctx, chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValu
   Box::new(ctx_future)
 }
 
-fn ping(mut context: Ctx, _chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValue<Ctx> {
-  let val = "pong".to_owned();
-  context.body = val;
+fn ping(mut context: Ctx, _next: impl Fn(Ctx) -> MiddlewareReturnValue<Ctx>  + Send + Sync) -> MiddlewareReturnValue<Ctx> {
+  let val = "pong";
+  context.body(val);
 
   Box::new(future::ok(context))
 }
@@ -54,10 +57,10 @@ fn ping(mut context: Ctx, _chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValu
 fn main() {
   dotenv().ok();
 
-  let mut app = App::<Ctx>::create(generate_context);
+  let mut app = App::create(generate_context);
 
-  app.use_middleware("/", profiling);
-  app.get("/ping", vec![ping]);
+  app.use_middleware("/", middleware![Ctx => profiling]);
+  app.get("/ping", middleware![Ctx => ping]);
 
   let host = env::var("HOST")
     .unwrap_or("0.0.0.0".to_string());
@@ -65,5 +68,6 @@ fn main() {
     .unwrap_or("4321".to_string());
 
   println!("Running on {}:{}", &host, &port);
-  App::start(app, host, port);
+  let server = Server::new(app);
+  server.start(&host, port.parse::<u16>().unwrap());
 }

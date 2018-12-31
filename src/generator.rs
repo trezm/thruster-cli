@@ -5,13 +5,11 @@ use chrono::Utc;
 use fuel_line::Render;
 use utils::*;
 
-use controller_template;
-use mod_template;
-use model_template;
-use service_template;
-use util_template;
-
 static TIMESTAMP_FORMAT: &str = "%Y-%m-%d-%H%M%S";
+
+#[derive(Render)]
+#[TemplateName = "./src/util.template.rs"]
+struct UtilTemplate {}
 
 pub fn migrate() {
   Command::new("diesel")
@@ -43,24 +41,62 @@ pub fn create_component(name: &str) {
     .output()
     .expect("failed to create models directory");
 
+  #[derive(Render)]
+  #[TemplateName = "./src/controller.template.rs"]
+  struct ControllerTemplate {
+    snek_case: String,
+    name: String,
+    ctx: String
+  }
   let mut controller_file = File::create(format!("src/{}s/{}_controller.rs", &name.to_snek_case(), &name.to_snek_case()))
     .expect("Could not create controller");
-  controller_file.write_all(controller_template::create(name, "Ctx").as_bytes())
+  controller_file.write_all((ControllerTemplate {
+    snek_case: SnekCase::to_snek_case(name),
+    name: name.to_owned(),
+    ctx: "Ctx".to_owned()
+  }).render().as_bytes())
     .expect("Could not write controller to file");
 
+  #[derive(Render)]
+  #[TemplateName = "./src/service.template.rs"]
+  struct ServiceTemplate {
+    snek_case: String,
+    name: String
+  }
   let mut service_file = File::create(format!("src/{}s/{}_service.rs", &name.to_snek_case(), &name.to_snek_case()))
     .expect("Could not create service");
-  service_file.write_all(service_template::create(name).as_bytes())
+  service_file.write_all((ServiceTemplate {
+    snek_case: SnekCase::to_snek_case(name),
+    name: name.to_owned()
+  }).render().as_bytes())
     .expect("Could not write service to file");
 
+  #[derive(Render)]
+  #[TemplateName = "./src/mod.template.rs"]
+  struct ModTemplate {
+    snek_case: String,
+    ctx: String
+  }
   let mut mod_file = File::create(format!("src/{}s/mod.rs", &name.to_snek_case()))
     .expect("Could not create mod file");
-  mod_file.write_all(mod_template::create(name, "Ctx").as_bytes())
+  mod_file.write_all((ModTemplate {
+    snek_case: SnekCase::to_snek_case(name),
+    ctx: "Ctx".to_owned()
+  }).render().as_bytes())
     .expect("Could not write mod to file");
 
+  #[derive(Render)]
+  #[TemplateName = "./src/model.template.rs"]
+  struct ModelTemplate {
+    snek_case: String,
+    name: String
+  }
   let mut model_file = File::create(format!("src/models/{}s.rs", name.to_snek_case()))
     .expect("Could not create model file");
-  model_file.write_all(model_template::create(name).as_bytes())
+  model_file.write_all((ModelTemplate {
+    snek_case: SnekCase::to_snek_case(name),
+    name: name.to_owned()
+  }).render().as_bytes())
     .expect("Could not write model file");
 
   let migration_folder = format!("migrations/{}_create_{}", Utc::now().format(TIMESTAMP_FORMAT), name.to_snek_case());
@@ -92,14 +128,11 @@ use "; &name.to_snek_case() ;"s::{init as "; &name.to_snek_case() ;"_routes};
 
 ...
 
-lazy_static! {
-  static ref APP: App<Ctx> = {
-    let mut _app = App::<Ctx>::create(generate_context);
+  let mut _app = App::<Ctx>::create(generate_context);
 
-    ....
+  ....
 
-    _app.use_sub_app(\"/"; &name.to_snek_case() ;"s\", &"; &name.to_snek_case() ;"_routes());
-  }
+  _app.use_sub_app(\"/"; &name.to_snek_case() ;"s\", &"; &name.to_snek_case() ;"_routes());
 }
 " };
 
@@ -119,14 +152,14 @@ pub fn init(name: &str) {
     .output()
     .expect("failed to initialize rust");
 
-  let dependencies = "'diesel = { version = \"1.0.0-rc1\", features = [\"postgres\", \"uuid\"] }
+  let dependencies = "'diesel = { version = \"1.0.0\", features = [\"postgres\", \"uuid\"] }
 dotenv = \"0.9.0\"
 futures = \"0.1\"
 lazy_static = \"0.2\"
 serde = \"1.0.24\"
 serde_json = \"1.0.8\"
 serde_derive = \"1.0.24\"
-thruster = \"0.3.5\"
+thruster = \"0.6.1\"
 time = \"0.1.38\"
 tokio = \"0.1.3\"
 tokio-proto = \"0.1\"
@@ -165,7 +198,7 @@ env_logger = { version = \"0.3.4\", default-features = false }
 
   let mut context_file = File::create(format!("{}/src/util.rs", name))
     .expect("Could not create util file");
-  context_file.write_all(util_template::create().as_bytes())
+  context_file.write_all((UtilTemplate {}).render().as_bytes())
     .expect("Could not write util file");
 
   Command::new("mkdir")
@@ -189,7 +222,7 @@ env_logger = { version = \"0.3.4\", default-features = false }
 
   let mut context_file = File::create(format!("{}/src/util.rs", name))
     .expect("Could not create util file");
-  context_file.write_all(util_template::create().as_bytes())
+  context_file.write_all((UtilTemplate {}).render().as_bytes())
     .expect("Could not write util file");
 
   #[derive(Render)]
