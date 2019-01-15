@@ -1,14 +1,14 @@
 use diesel;
 use diesel::QueryDsl;
-use schema::{{ snek_case }}s;
-use schema::{{ snek_case }}s::dsl::*;
 use diesel::RunQueryDsl;
 use diesel::result::Error;
 
 use crate::util::db;
 use crate::models::{{ snek_case }}s::{ {{ name }}, New{{ name }} };
+use crate::schema::{{ snek_case }}s;
+use crate::schema::{{ snek_case }}s::dsl::*;
 
-pub fn create_{{ snek_case }}(new_{{ snek_case }}: New{{ name }}) -> Result<"; name ;", Error> {
+pub fn create_{{ snek_case }}(new_{{ snek_case }}: New{{ name }}) -> Result<{{ name }}, Error> {
   let conn = db::establish_connection();
 
   let {{ snek_case }} = diesel::insert_into({{ snek_case }}s::table)

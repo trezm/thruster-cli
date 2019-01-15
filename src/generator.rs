@@ -3,7 +3,8 @@ use std::fs::{create_dir, File};
 use std::io::prelude::*;
 use chrono::Utc;
 use fuel_line::Render;
-use utils::*;
+
+use crate::utils::*;
 
 static TIMESTAMP_FORMAT: &str = "%Y-%m-%d-%H%M%S";
 
@@ -25,7 +26,13 @@ pub fn migrate() {
     .expect("failed to create schema");
 }
 
-pub fn create_component(name: &str) {
+pub fn create_component(raw_name: &str) {
+  let mut chars = raw_name.chars();
+  let name = match chars.next() {
+      None => String::new(),
+      Some(f) => f.to_uppercase().collect::<String>() + chars.as_str(),
+  };
+
   create_dir(format!("src/{}s", &name.to_snek_case()))
     .expect("failed to create component directory");
 
@@ -51,7 +58,7 @@ pub fn create_component(name: &str) {
   let mut controller_file = File::create(format!("src/{}s/{}_controller.rs", &name.to_snek_case(), &name.to_snek_case()))
     .expect("Could not create controller");
   controller_file.write_all((ControllerTemplate {
-    snek_case: SnekCase::to_snek_case(name),
+    snek_case: SnekCase::to_snek_case(&name),
     name: name.to_owned(),
     ctx: "Ctx".to_owned()
   }).render().as_bytes())
@@ -66,7 +73,7 @@ pub fn create_component(name: &str) {
   let mut service_file = File::create(format!("src/{}s/{}_service.rs", &name.to_snek_case(), &name.to_snek_case()))
     .expect("Could not create service");
   service_file.write_all((ServiceTemplate {
-    snek_case: SnekCase::to_snek_case(name),
+    snek_case: SnekCase::to_snek_case(&name),
     name: name.to_owned()
   }).render().as_bytes())
     .expect("Could not write service to file");
@@ -80,7 +87,7 @@ pub fn create_component(name: &str) {
   let mut mod_file = File::create(format!("src/{}s/mod.rs", &name.to_snek_case()))
     .expect("Could not create mod file");
   mod_file.write_all((ModTemplate {
-    snek_case: SnekCase::to_snek_case(name),
+    snek_case: SnekCase::to_snek_case(&name),
     ctx: "Ctx".to_owned()
   }).render().as_bytes())
     .expect("Could not write mod to file");
@@ -94,7 +101,7 @@ pub fn create_component(name: &str) {
   let mut model_file = File::create(format!("src/models/{}s.rs", name.to_snek_case()))
     .expect("Could not create model file");
   model_file.write_all((ModelTemplate {
-    snek_case: SnekCase::to_snek_case(name),
+    snek_case: SnekCase::to_snek_case(&name),
     name: name.to_owned()
   }).render().as_bytes())
     .expect("Could not write model file");
@@ -124,7 +131,7 @@ mod "; &name.to_snek_case() ;"s;
 
 ...
 
-use "; &name.to_snek_case() ;"s::{init as "; &name.to_snek_case() ;"_routes};
+use crate::"; &name.to_snek_case() ;"s::{init as "; &name.to_snek_case() ;"_routes};
 
 ...
 
@@ -132,7 +139,7 @@ use "; &name.to_snek_case() ;"s::{init as "; &name.to_snek_case() ;"_routes};
 
   ....
 
-  _app.use_sub_app(\"/"; &name.to_snek_case() ;"s\", &"; &name.to_snek_case() ;"_routes());
+  _app.use_sub_app(\"/"; &name.to_snek_case() ;"s\", "; &name.to_snek_case() ;"_routes());
 }
 " };
 
@@ -152,10 +159,11 @@ pub fn init(name: &str) {
     .output()
     .expect("failed to initialize rust");
 
-  let dependencies = "'diesel = { version = \"1.0.0\", features = [\"postgres\", \"uuid\"] }
+  let dependencies = "'diesel = { version = \"1.0.0\", features = [\"postgres\", \"r2d2\", \"uuid\"] }
 dotenv = \"0.9.0\"
 futures = \"0.1\"
 lazy_static = \"0.2\"
+r2d2 = \"0.8.3\"
 serde = \"1.0.24\"
 serde_json = \"1.0.8\"
 serde_derive = \"1.0.24\"

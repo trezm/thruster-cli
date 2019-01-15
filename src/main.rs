@@ -1,7 +1,3 @@
-extern crate regex;
-extern crate rand;
-extern crate chrono;
-
 #[macro_use] extern crate fuel_line;
 #[macro_use] extern crate fuel_line_derive;
 
@@ -12,7 +8,7 @@ mod templatify;
 mod utils;
 mod generator;
 
-use generator::{create_component, migrate, init};
+use crate::generator::{create_component, migrate, init};
 
 fn main() {
   let mut args = env::args();

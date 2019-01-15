@@ -55,17 +55,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "fuel_line"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bytes 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "fuel_line_derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fuel_line_derive 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.6.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "fuel_line_derive"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "proc-macro2 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -201,11 +201,11 @@ dependencies = [
 
 [[package]]
 name = "thruster-cli"
-version = "0.2.0"
+version = "0.2.3"
 dependencies = [
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "fuel_line 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "fuel_line_derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fuel_line 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fuel_line_derive 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -285,8 +285,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7c20ebe0b2b08b0aeddba49c609fe7957ba2e33449882cb186a180bc60682fa9"
 "checksum fuchsia-zircon 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "2e9763c69ebaae630ba35f74888db465e49e259ba1bc0eda7d06f4a067615d82"
 "checksum fuchsia-zircon-sys 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "3dcaa9ae7725d12cdb85b3ad99a434db70b468c09ded17e012d86b5c1010f7a7"
-"checksum fuel_line 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2eace47d7b80c7b8d512b0bdcd98c2aac07e6069335bbc689bfe97671420920c"
-"checksum fuel_line_derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "802870edd2e0b5629f3620269cc485997a66be2757af2723d6aa0dcb58224d7b"
+"checksum fuel_line 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "b77d4b5acd5d3529e2cd85774d3825af0d49fbdead1539a567704fab6496816b"
+"checksum fuel_line_derive 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "403a64febe13eeeb752000b64e6b41294dde983f06e52a2512219319146810b3"
 "checksum iovec 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "dbe6e417e7d0975db6512b90796e8ce223145ac4e33c377e4a42882a0e88bb08"
 "checksum lazy_static 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c8f31047daa365f19be14b47c29df4f7c3b581832407daabe6ae77397619237d"
 "checksum libc 0.2.36 (registry+https://github.com/rust-lang/crates.io-index)" = "1e5d97d6708edaa407429faa671b942dc0f2727222fb6b6539bf1db936e4b121"

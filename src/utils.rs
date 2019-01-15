@@ -16,6 +16,18 @@ impl SnekCase for str {
   }
 }
 
+impl SnekCase for String {
+  fn to_snek_case(&self) -> String {
+    let reg = Regex::new(r"(.)([A-Z])").unwrap();
+
+    let final_value = reg.replace_all(&self, |caps: &Captures| {
+      format!("{}_{}", &caps[1], &caps[2])
+    });
+
+    final_value.to_lowercase()
+  }
+}
+
 #[cfg(test)]
 mod test {
   use super::SnekCase;

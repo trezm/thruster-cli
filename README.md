@@ -7,7 +7,30 @@ A cli to setup, and generate new components for, a thruster app.
 - Clone this repository
 - Run:
 ```
-> cargo install --force
+> cargo install --patch . --force
+```
+
+## Quick Start
+
+To make a simple project with a "Messages" model, simply run:
+
+```
+> thruster-cli init test-project
+> thruster-cli component message
+> thruster-cli migrate
+```
+
+To develop locally (i.e. faster build,) run
+
+```
+> docker-compose up -d postgres
+> cargo run
+```
+
+Or, to use docker entirely, you can run
+
+```
+> docker-compose up
 ```
 
 ## Useage
