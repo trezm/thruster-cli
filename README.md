@@ -77,3 +77,12 @@ If you prefer to run outside of a container, you can run
 ```
 
 Just like a normal rust project. Make sure you have postgres running as well so your server has a DB!
+
+## Using for async
+
+Commands are the same, just add `--async` as a flag! For example,
+
+```
+> thruster-cli init --async ProjectName
+> thruster-cli component --async SomeComponent
+```

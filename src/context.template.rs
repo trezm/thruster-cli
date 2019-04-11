@@ -6,7 +6,7 @@ use thruster::{
   Response,
   Request
 };
-use thruster::builtins::query_params::HasQueryParams;
+use thruster::thruster_middleware::query_params::HasQueryParams;
 
 pub enum SameSite {
   Strict,

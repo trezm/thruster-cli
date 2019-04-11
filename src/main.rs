@@ -10,11 +10,20 @@ mod generator;
 
 use crate::generator::{create_component, migrate, init};
 
+enum Command {
+  NewComponent(String, bool),
+  Init(String, bool),
+  Migrate,
+  None
+}
+
 fn main() {
   let mut args = env::args();
   args.next();
 
   let mut arg = args.next();
+
+  let mut command = Command::None;
 
   while arg.is_some() {
     let unwrapped_arg = arg.unwrap();
@@ -22,8 +31,23 @@ fn main() {
     if unwrapped_arg == "c" ||
       unwrapped_arg == "component" {
 
-      let name = args.next().expect("Component flag needs an argument");
-      create_component(&name);
+      let mut component_name = "".to_string();
+      let mut is_async = false;
+
+      arg = args.next();
+      while arg.is_some() {
+        let arg_clone = arg.clone();
+        component_name = arg_clone.unwrap().clone();
+
+        match arg.unwrap().as_ref() {
+          "-a" | "--async" => is_async = true,
+          _ => ()
+        };
+
+        arg = args.next();
+      }
+
+      command = Command::NewComponent(component_name, is_async);
     }
 
     if unwrapped_arg == "-h" ||
@@ -38,13 +62,38 @@ commands:
     }
 
     if unwrapped_arg == "init" {
-      init(&args.next().expect("init needs an argument, form 'thruster init [project-name]'"));
+      // let project_name = args.next().expect("init needs an argument, form 'thruster init [project-name]'");
+      // command = Command::Init(project_name, false);
+      let mut project_name = "".to_string();
+      let mut is_async = false;
+
+      arg = args.next();
+      while arg.is_some() {
+        let arg_clone = arg.clone();
+        project_name = arg_clone.unwrap().clone();
+
+        match arg.unwrap().as_ref() {
+          "-a" | "--async" => is_async = true,
+          _ => ()
+        };
+
+        arg = args.next();
+      }
+
+      command = Command::Init(project_name, is_async);
     }
 
     if unwrapped_arg == "migrate" {
-      migrate();
+      command = Command::Migrate
     }
 
     arg = args.next();
   }
+
+  match command {
+    Command::NewComponent(name, is_async) => create_component(&name, is_async),
+    Command::Init(name, is_async) => init(&name, is_async),
+    Command::Migrate => migrate(),
+    Command::None => ()
+  };
 }

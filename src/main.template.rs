@@ -8,6 +8,7 @@ extern crate tokio;
 extern crate tokio_proto;
 extern crate tokio_service;
 extern crate time;
+extern crate uuid;
 
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate diesel;
@@ -24,8 +25,8 @@ use dotenv::dotenv;
 use futures::{future, Future};
 
 use thruster::{middleware, App, MiddlewareChain, MiddlewareReturnValue};
-use thruster::builtins::server::Server;
-use thruster::server::ThrusterServer;
+use thruster::server::Server;
+use thruster::ThrusterServer;
 use time::Duration;
 
 use crate::context::{generate_context, Ctx};
@@ -54,6 +55,13 @@ fn ping(mut context: Ctx, _next: impl Fn(Ctx) -> MiddlewareReturnValue<Ctx>  + S
   Box::new(future::ok(context))
 }
 
+fn not_found(mut context: Ctx, _next: impl Fn(Ctx) -> MiddlewareReturnValue<Ctx>  + Send + Sync) -> MiddlewareReturnValue<Ctx> {
+  context.body("Whoops! Nothing here!");
+  context.status(404);
+
+  Box::new(future::ok(context))
+}
+
 fn main() {
   dotenv().ok();
 
@@ -61,6 +69,8 @@ fn main() {
 
   app.use_middleware("/", middleware![Ctx => profiling]);
   app.get("/ping", middleware![Ctx => ping]);
+
+  app.set404(middleware![Ctx => not_found]);
 
   let host = env::var("HOST")
     .unwrap_or("0.0.0.0".to_string());

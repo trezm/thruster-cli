@@ -1,8 +1,9 @@
+use uuid::Uuid;
 use crate::schema::{{ snek_case }}s;
 
 #[derive(Debug, Deserialize, Serialize, Queryable)]
 pub struct {{ name }} {
-  pub id: i32,
+  pub id: Uuid,
   pub some_field: Option<String>
 }
 
