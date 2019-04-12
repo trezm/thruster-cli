@@ -1,6 +1,6 @@
 [package]
 name = "thruster-cli"
-version = "0.7.3"
+version = "0.7.4"
 authors = ["Pete Mertz <peter.s.mertz@gmail.com>"]
 description = "A cli for thruster, the rust web framework."
 readme = "README.md"

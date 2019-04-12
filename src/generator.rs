@@ -240,6 +240,7 @@ uuid = { version = \"0.6\", features = [\"serde\", \"v4\"] }
     .output()
     .expect("failed to setup diesel");
 
+  create_dir("migrations");
   let migration_folder = format!("migrations/{}_add_extensions_{}", Utc::now().format(TIMESTAMP_FORMAT), name.to_snek_case());
   create_dir(&migration_folder)
     .expect("failed to create migration folder");
