@@ -1,6 +1,6 @@
 # thruster Cli
 
-A cli to setup, and generate new components for, a thruster app.
+A cli to setup, and generate new components for, a thruster app. Still a work in progress, so please report bugs!
 
 ## Installation
 

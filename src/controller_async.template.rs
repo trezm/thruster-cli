@@ -1,9 +1,7 @@
-use std::future::Future;
 use std::boxed::Box;
-use std::pin::Pin;
 use uuid::Uuid;
 use thruster::{MiddlewareNext, MiddlewareReturnValue};
-use thruster::thruster_proc::{async_middleware, middleware_fn};
+use thruster::thruster_proc::{middleware_fn};
 
 use crate::{{ snek_case }}s::{{ snek_case }}_service;
 use crate::models::{{ snek_case }}s::{ New{{ name }}, {{ name }} };
@@ -45,12 +43,12 @@ pub async fn get_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{
     None => return error(context)
   };
 
-  let id_as_number = match id.parse::<i32>() {
-    Ok(_id_as_number) => _id_as_number,
+  let parsed_id = match id.parse::<Uuid>() {
+    Ok(_parsed_id) => _parsed_id,
     Err(_) => return error(context)
   };
 
-  let fetched_result = match {{ snek_case }}_service::get_{{ snek_case }}(id_as_number) {
+  let fetched_result = match {{ snek_case }}_service::get_{{ snek_case }}(parsed_id) {
     Ok(_fetched_result) => _fetched_result,
     Err(_) => return error(context)
   };
@@ -64,11 +62,11 @@ pub async fn get_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{
 }
 
 #[middleware_fn]
-pub async fn update_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
+pub async fn update_{{ snek_case }}(context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
   context
 }
 
 #[middleware_fn]
-pub async fn delete_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
+pub async fn delete_{{ snek_case }}(context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
   context
 }

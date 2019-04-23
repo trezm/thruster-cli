@@ -19,12 +19,10 @@ mod util;
 
 use std::env;
 use std::boxed::Box;
-use std::pin::Pin;
-use std::future::Future;
 use dotenv::dotenv;
 
 use thruster::{MiddlewareNext, MiddlewareReturnValue};
-use thruster::{App, Request};
+use thruster::{App};
 use thruster::server::Server;
 use thruster::ThrusterServer;
 use thruster::thruster_proc::{async_middleware, middleware_fn};

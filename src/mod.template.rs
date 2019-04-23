@@ -1,5 +1,5 @@
-mod {{ snek_case }}_controller;
-mod {{ snek_case }}_service;
+pub mod {{ snek_case }}_controller;
+pub mod {{ snek_case }}_service;
 
 use thruster::{App, middleware, MiddlewareChain, MiddlewareReturnValue, Request};
 use crate::context::{generate_context, {{ ctx }}};

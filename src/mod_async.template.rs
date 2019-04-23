@@ -1,10 +1,7 @@
-mod {{ snek_case }}_controller;
-mod {{ snek_case }}_service;
+pub mod {{ snek_case }}_controller;
+pub mod {{ snek_case }}_service;
 
-use std::future::Future;
-use std::boxed::Box;
-use std::pin::Pin;
-use thruster::{App, MiddlewareNext, MiddlewareReturnValue, Request};
+use thruster::{App, Request};
 use thruster::thruster_proc::{async_middleware};
 
 use crate::context::{generate_context, {{ ctx }}};
