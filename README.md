@@ -7,7 +7,7 @@ A cli to setup, and generate new components for, a thruster app. Still a work in
 - Clone this repository
 - Run:
 ```
-> cargo install --patch . --force
+> cargo install --path . --force
 ```
 
 ## Quick Start
