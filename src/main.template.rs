@@ -7,7 +7,6 @@ extern crate serde_json;
 extern crate tokio;
 extern crate tokio_proto;
 extern crate tokio_service;
-extern crate time;
 extern crate uuid;
 
 #[macro_use] extern crate serde_derive;
@@ -27,18 +26,18 @@ use futures::{future, Future};
 use thruster::{middleware, App, MiddlewareChain, MiddlewareReturnValue};
 use thruster::server::Server;
 use thruster::ThrusterServer;
-use time::Duration;
+use std::time::Instant;
 
 use crate::context::{generate_context, Ctx};
 
 fn profiling(context: Ctx, next: impl Fn(Ctx) -> MiddlewareReturnValue<Ctx>  + Send + Sync) -> MiddlewareReturnValue<Ctx> {
-  let start_time = time::now();
+  let start_time = Instant::now();
 
   let ctx_future = next(context)
       .and_then(move |ctx| {
-        let elapsed_time: Duration = time::now() - start_time;
+        let elapsed_time = start_time.elapsed();
         println!("[{}μs] {} -- {}",
-          elapsed_time.num_microseconds().unwrap(),
+          elapsed_time.as_micros(),
           ctx.request.method(),
           ctx.request.path());
 

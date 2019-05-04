@@ -5,7 +5,6 @@ extern crate env_logger;
 extern crate thruster;
 extern crate serde;
 extern crate serde_json;
-extern crate time;
 extern crate uuid;
 
 #[macro_use] extern crate serde_derive;
@@ -27,19 +26,19 @@ use thruster::server::Server;
 use thruster::ThrusterServer;
 use thruster::thruster_proc::{async_middleware, middleware_fn};
 
-use time::Duration;
+use std::time::Instant;
 
 use crate::context::{generate_context, Ctx};
 
 #[middleware_fn]
 async fn profiling(mut context: Ctx, next: MiddlewareNext<Ctx>) -> Ctx {
-  let start_time = time::now();
+  let start_time = Instant::now();
 
   context = await!(next(context));
 
-  let elapsed_time: Duration = time::now() - start_time;
+  let elapsed_time = start_time.elapsed();
   println!("[{}μs] {} -- {}",
-    elapsed_time.num_microseconds().unwrap(),
+    elapsed_time.as_micros(),
     context.request.method(),
     context.request.path());
 

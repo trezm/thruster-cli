@@ -203,7 +203,7 @@ dependencies = [
 
 [[package]]
 name = "thruster-cli"
-version = "0.7.4"
+version = "0.7.5"
 dependencies = [
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "fuel_line 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
