@@ -5,7 +5,7 @@ use thruster::{App, Request};
 use thruster::thruster_proc::{async_middleware};
 
 use crate::context::{generate_context, {{ ctx }}};
-use crate::{{ snek_case }}s::{{ snek_case }}_controller::{
+use crate::{{ snek_case_plural }}::{{ snek_case }}_controller::{
   create_{{ snek_case }},
   get_{{ snek_case }},
   update_{{ snek_case }},

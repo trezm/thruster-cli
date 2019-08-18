@@ -1,8 +1,8 @@
 use crate::context::{ {{ ctx }} };
 use thruster::{MiddlewareChain, MiddlewareReturnValue};
 
-use crate::{{ snek_case }}s::{{ snek_case }}_service;
-use crate::models::{{ snek_case }}s::{ New{{ name }}, {{ name }} };
+use crate::{{ snek_case_plural }}::{{ snek_case }}_service;
+use crate::models::{{ snek_case_plural }}::{ New{{ name }}, {{ name }} };
 use futures::future;
 use std::boxed::Box;
 use uuid::Uuid;

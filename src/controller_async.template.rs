@@ -3,8 +3,8 @@ use uuid::Uuid;
 use thruster::{MiddlewareNext, MiddlewareReturnValue};
 use thruster::thruster_proc::{middleware_fn};
 
-use crate::{{ snek_case }}s::{{ snek_case }}_service;
-use crate::models::{{ snek_case }}s::{ New{{ name }}, {{ name }} };
+use crate::{{ snek_case_plural }}::{{ snek_case }}_service;
+use crate::models::{{ snek_case_plural }}::{ New{{ name }}, {{ name }} };
 use crate::context::{ {{ ctx }} };
 
 #[middleware_fn]

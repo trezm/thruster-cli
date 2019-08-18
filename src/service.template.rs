@@ -5,14 +5,14 @@ use diesel::result::Error;
 use uuid::Uuid;
 
 use crate::util::db;
-use crate::models::{{ snek_case }}s::{ {{ name }}, New{{ name }} };
-use crate::schema::{{ snek_case }}s;
-use crate::schema::{{ snek_case }}s::dsl::*;
+use crate::models::{{ snek_case_plural }}::{ {{ name }}, New{{ name }} };
+use crate::schema::{{ snek_case_plural }};
+use crate::schema::{{ snek_case_plural }}::dsl::*;
 
 pub fn create_{{ snek_case }}(new_{{ snek_case }}: New{{ name }}) -> Result<{{ name }}, Error> {
   let conn = db::establish_connection();
 
-  let {{ snek_case }} = diesel::insert_into({{ snek_case }}s::table)
+  let {{ snek_case }} = diesel::insert_into({{ snek_case_plural }}::table)
     .values(&new_{{ snek_case }})
     .get_result(&conn);
 
@@ -22,7 +22,7 @@ pub fn create_{{ snek_case }}(new_{{ snek_case }}: New{{ name }}) -> Result<{{ n
 pub fn get_{{ snek_case }}(identifier: Uuid) -> Result<{{ name }}, Error> {
   let conn = db::establish_connection();
 
-  let {{ snek_case }} = {{ snek_case }}s.find(identifier)
+  let {{ snek_case }} = {{ snek_case_plural }}.find(identifier)
     .first(&conn);
 
   {{ snek_case }}
