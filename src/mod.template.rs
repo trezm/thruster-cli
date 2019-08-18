@@ -3,7 +3,7 @@ pub mod {{ snek_case }}_service;
 
 use thruster::{App, middleware, MiddlewareChain, MiddlewareReturnValue, Request};
 use crate::context::{generate_context, {{ ctx }}};
-use crate::{{ snek_case }}s::{{ snek_case }}_controller::{
+use crate::{{ snek_case_plural }}::{{ snek_case }}_controller::{
   create_{{ snek_case }},
   get_{{ snek_case }},
   update_{{ snek_case }},

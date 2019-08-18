@@ -16,3 +16,4 @@ regex = { version = "0.2.5" }
 rand = "0.4"
 fuel_line = "0.1.2"
 fuel_line_derive = "0.1.2"
+Inflector = "*"
