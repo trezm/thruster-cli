@@ -1,6 +1,6 @@
 use std::boxed::Box;
 use uuid::Uuid;
-use thruster::{MiddlewareNext, MiddlewareReturnValue};
+use thruster::{MiddlewareNext, MiddlewareReturnValue, MiddlewareResult};
 use thruster::thruster_proc::{middleware_fn};
 
 use crate::{{ snek_case }}s::{{ snek_case }}_service;
@@ -8,7 +8,7 @@ use crate::models::{{ snek_case }}s::{ New{{ name }}, {{ name }} };
 use crate::context::{ {{ ctx }} };
 
 #[middleware_fn]
-pub async fn create_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
+pub async fn create_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> MiddlewareResult<{{ ctx }}> {
   match serde_json::from_str::<New{{ name }}>(&context.request.body()) {
     Ok(new_{{ snek_case }}) => {
       match {{ snek_case }}_service::create_{{ snek_case }}(new_{{ snek_case }}) {
@@ -27,11 +27,11 @@ pub async fn create_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNex
     }
   };
 
-  context
+  Ok(context)
 }
 
 #[middleware_fn]
-pub async fn get_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
+pub async fn get_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> MiddlewareResult<{{ ctx }}> {
   fn error(mut context: Ctx) -> Ctx {
     context.status(400);
     context.body("Could not get {{ name }}");
@@ -58,15 +58,15 @@ pub async fn get_{{ snek_case }}(mut context: {{ ctx }}, _next: MiddlewareNext<{
     Err(_) => return error(context)
   };
 
-  context
+  Ok(context)
 }
 
 #[middleware_fn]
-pub async fn update_{{ snek_case }}(context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
-  context
+pub async fn update_{{ snek_case }}(context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> MiddlewareResult<{{ ctx }}> {
+  Ok(context)
 }
 
 #[middleware_fn]
-pub async fn delete_{{ snek_case }}(context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> {{ ctx }} {
-  context
+pub async fn delete_{{ snek_case }}(context: {{ ctx }}, _next: MiddlewareNext<{{ ctx }}>) -> MiddlewareResult<{{ ctx }}> {
+  Ok(context)
 }

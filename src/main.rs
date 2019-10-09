@@ -11,8 +11,8 @@ mod generator;
 use crate::generator::{create_component, migrate, init};
 
 enum Command {
-  NewComponent(String, bool),
-  Init(String, bool),
+  NewComponent(String, bool, bool),
+  Init(String, bool, bool),
   Migrate,
   None
 }
@@ -33,6 +33,7 @@ fn main() {
 
       let mut component_name = "".to_string();
       let mut is_async = false;
+      let mut is_results = false;
 
       arg = args.next();
       while arg.is_some() {
@@ -41,13 +42,14 @@ fn main() {
 
         match arg.unwrap().as_ref() {
           "-a" | "--async" => is_async = true,
+          "-r" | "--results" => is_results = true,
           _ => ()
         };
 
         arg = args.next();
       }
 
-      command = Command::NewComponent(component_name, is_async);
+      command = Command::NewComponent(component_name, is_async, is_results);
     }
 
     if unwrapped_arg == "-h" ||
@@ -66,6 +68,7 @@ commands:
       // command = Command::Init(project_name, false);
       let mut project_name = "".to_string();
       let mut is_async = false;
+      let mut is_results = false;
 
       arg = args.next();
       while arg.is_some() {
@@ -74,13 +77,14 @@ commands:
 
         match arg.unwrap().as_ref() {
           "-a" | "--async" => is_async = true,
-          _ => ()
+          "-r" | "--results" => is_results = true,
+          _ => (),
         };
 
         arg = args.next();
       }
 
-      command = Command::Init(project_name, is_async);
+      command = Command::Init(project_name, is_async, is_results);
     }
 
     if unwrapped_arg == "migrate" {
@@ -91,8 +95,8 @@ commands:
   }
 
   match command {
-    Command::NewComponent(name, is_async) => create_component(&name, is_async),
-    Command::Init(name, is_async) => init(&name, is_async),
+    Command::NewComponent(name, is_async, is_results) => create_component(&name, is_async, is_results),
+    Command::Init(name, is_async, is_results) => init(&name, is_async),
     Command::Migrate => migrate(),
     Command::None => ()
   };
