@@ -26,7 +26,7 @@ pub fn migrate() {
     .expect("failed to create schema");
 }
 
-pub fn create_component(raw_name: &str, is_async: bool) {
+pub fn create_component(raw_name: &str, is_async: bool, is_results: bool) {
   let mut chars = raw_name.chars();
   let name = match chars.next() {
       None => String::new(),
@@ -62,20 +62,32 @@ pub fn create_component(raw_name: &str, is_async: bool) {
     name: String,
     ctx: String
   }
+  #[derive(Render)]
+  #[TemplateName = "./src/controller_async_results.template.rs"]
+  struct ControllerAsyncResultsTemplate {
+    snek_case: String,
+    name: String,
+    ctx: String
+  }
 
   let mut controller_file = File::create(format!("src/{}s/{}_controller.rs", &name.to_snek_case(), &name.to_snek_case()))
     .expect("Could not create controller");
-  match is_async {
-    false => controller_file.write_all((ControllerTemplate {
+  match (is_async, is_results) {
+    (false, _) => controller_file.write_all((ControllerTemplate {
       snek_case: SnekCase::to_snek_case(&name),
       name: name.to_owned(),
       ctx: "Ctx".to_owned()
     }).render().as_bytes()),
-    true => controller_file.write_all((ControllerAsyncTemplate {
+    (true, false) => controller_file.write_all((ControllerAsyncTemplate {
       snek_case: SnekCase::to_snek_case(&name),
       name: name.to_owned(),
       ctx: "Ctx".to_owned()
-    }).render().as_bytes())
+    }).render().as_bytes()),
+    (true, true) => controller_file.write_all((ControllerAsyncResultsTemplate {
+      snek_case: SnekCase::to_snek_case(&name),
+      name: name.to_owned(),
+      ctx: "Ctx".to_owned()
+    }).render().as_bytes()),
   }
     .expect("Could not write controller to file");
 
