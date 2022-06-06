@@ -12,7 +12,7 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4"
-regex = { version = "0.2.5" }
+regex = { version = "1.5.5" }
 rand = "0.4"
 fuel_line = "0.1.2"
 fuel_line_derive = "0.1.2"
